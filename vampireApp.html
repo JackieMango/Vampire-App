@@ -1,47 +1,117 @@
 <!DOCTYPE html>
-
-<html lang = "en">
+<html lang="en">
 <head>
     <title>Is my classmate a Vampire?</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+
     <script type="text/javascript">
+        let classmates = [];
+
+        function addClassmate() {
+            const firstName = $('#fname').val().trim();
+            const lastName = $('#lname').val().trim();
+            const shadowScore = parseInt($('#shadow').val());
+            const complexionScore = parseInt($('#complexion').val());
+            const garlicScore = parseInt($('#garlic').val());
+
+            if (!firstName || !lastName) {
+                alert("Please enter both first and last name.");
+                return;
+            }
+
+            const totalScore = shadowScore + complexionScore + garlicScore;
+            const result = totalScore > 6 ? 'Vampire' : 'Human';
+
+            const newClassmate = {
+                name: `${firstName} ${lastName}`,
+                shadow: shadowScore === 4 ? "No Shadow" : "Has Shadow",
+                complexion: complexionScore === 3 ? "Pale" : "Not Pale",
+                garlic: garlicScore === 3 ? "Hates Garlic" : "Doesn't Hate Garlic",
+                result: result
+            };
+
+            classmates.push(newClassmate);
+
+            updateTable();
+            clearForm();
+        }
+
+        function updateTable() {
+            const tbody = $('#classmateTable tbody');
+            tbody.empty();
+
+            classmates.forEach(classmate => {
+                tbody.append(`
+                    <tr>
+                        <td>${classmate.name}</td>
+                        <td>${classmate.shadow}</td>
+                        <td>${classmate.complexion}</td>
+                        <td>${classmate.garlic}</td>
+                        <td>${classmate.result}</td>
+                    </tr>
+                `);
+            });
+        }
+
+        function clearForm() {
+            $('#fname').val('');
+            $('#lname').val('');
+            $('#shadow').val('4');
+            $('#complexion').val('3');
+            $('#garlic').val('3');
+        }
     </script>
 </head>
 <body>
-  <div class ="container">
-    <h2>Find out today if your classmate is vampire *gasp*</h2>
+    <div class="container">
+        <h2>Find out today if your classmate is a vampire *gasp*</h2>
 
-    <div class = "form-group">
+        <div class="form-group">
+            <label for="fname">First name:</label>
+            <input type="text" id="fname" class="form-control" name="fname">
 
-      <label for="fname">First name:</label><br>
-      <input type="text" id="fname" name="fname"><br>
+            <label for="lname">Last name:</label>
+            <input type="text" id="lname" class="form-control" name="lname">
 
-      <label for="lname">Last name: </label>
-      <input type="text" id="lname" name="lname"><br>
+            <label for="shadow">Does this person have no shadow?</label>
+            <select class="form-control" id="shadow">
+                <option value='4'>Yes</option>
+                <option value='0'>No</option>
+            </select>
 
-      <label for = "shadow"> Does this person have no shadow</label>
-      <select class="form-control" id="shadow">
-        <option value='4'>Yes</option>
-        <option value='0'>No</option>
-      </select>
+            <label for="complexion">Are they pale?</label>
+            <select class="form-control" id="complexion">
+                <option value='3'>Yes</option>
+                <option value='0'>No</option>
+            </select>
 
-      <label for = "complexion">Are they pale?</label>
-      <select class="form-control" id="complexion">
-        <option value=3>Yes</option>
-        <option value=0>No</option>
-      </select>
+            <label for="garlic">Do they have a natural disdain towards garlic?</label>
+            <select class="form-control" id="garlic">
+                <option value='3'>Yes</option>
+                <option value='0'>No</option>
+            </select>
 
-      <label for ="garlic">Do they have a natural distain towards garlic</label>
-      <select class="form-control" id="garlic">
-        <option value=3>Yes</option>
-        <option value=0>No</option>
-      </select>
+            <button class="btn btn-primary" onclick="addClassmate()">Add Classmate</button>
+        </div>
+
+        <h3>Classmate List</h3>
+        <table class="table table-bordered" id="classmateTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Shadow</th>
+                    <th>Complexion</th>
+                    <th>Garlic</th>
+                    <th>Result</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
     </div>
-  </div>
 </body>
-</html> 
+</html>
