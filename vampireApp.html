@@ -41,6 +41,17 @@
             clearForm();
         }
 
+        function randomGuess()
+        {
+            const shadow = Math.random() < .5? 4: 0;
+            const complexion = Math.random() < .5? 3:0;
+            const garlic = Math.random() < .5? 3:0;
+
+            $('#shadow').val(shadow);
+            $('#complexion').val(complexion);
+            $('#garlic').val(garlic);
+
+        }
         function updateTable() {
             const tbody = $('#classmateTable tbody');
             tbody.empty();
@@ -61,9 +72,9 @@
         function clearForm() {
             $('#fname').val('');
             $('#lname').val('');
-            $('#shadow').val('4');
-            $('#complexion').val('3');
-            $('#garlic').val('3');
+            $('#shadow').val('' );
+            $('#complexion').val('');
+            $('#garlic').val('');
         }
     </script>
 </head>
@@ -77,7 +88,11 @@
 
             <label for="lname">Last name:</label>
             <input type="text" id="lname" class="form-control" name="lname">
-
+            <div>  
+                <br>
+                <h2>Answer Questions or Choose Random Guess</h2>
+                <button onclick="randomGuess()">Random Guess</button>
+            </div>
             <label for="shadow">Does this person have no shadow?</label>
             <select class="form-control" id="shadow">
                 <option value='4'>Yes</option>
@@ -95,6 +110,7 @@
                 <option value='3'>Yes</option>
                 <option value='0'>No</option>
             </select>
+            
 
             <button class="btn btn-primary" onclick="addClassmate()">Add Classmate</button>
         </div>
