@@ -143,11 +143,13 @@
                 ['Vampire', vampireCount]
             ]);
 
-            
+            // styling the google chart
             const options = {
                 'title': 'Vampire vs Human',
                 'width': 550,
-                'height': 400
+                'height': 400,
+                'colors': ['#B82E2E', '#000000']
+
             };
 
             
@@ -165,6 +167,30 @@
             updateChart();
         });
     </script>
+    
+    <!-- added styling to these elements-->
+    <style>
+        div{
+            background-color: rgb(220, 78, 78);
+        }
+        button{
+            background-color: rgb(120, 107, 107);
+            border-radius: 5px;
+        }
+        .table-bordered{
+            background-color: rgb(230, 227, 229);
+        }
+        h2{
+            font-family: 'Garamond';
+        }
+        h3{
+            font-family: 'Garamond';
+        }    
+        body
+        {
+            border: 5px solid black;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -181,6 +207,7 @@
                 <h2>Answer Questions or Choose Random Guess</h2>
                 <button onclick="randomGuess()">Random Guess</button>
             </div>
+            <br>
             <label for="shadow">Does this person have no shadow?</label>
             <select class="form-control" id="shadow">
                 <option value='4'>Yes</option>
@@ -198,8 +225,8 @@
                 <option value='3'>Yes</option>
                 <option value='0'>No</option>
             </select>
-
-            <button class="btn btn-primary" onclick="addClassmate()">Add Classmate</button>
+            <br>
+            <button  onclick="addClassmate()">Add Classmate</button>
         </div>
 
         <h3>Classmate List</h3>
