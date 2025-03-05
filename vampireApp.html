@@ -10,8 +10,43 @@
 
 
     <script type="text/javascript">
-        let classmates = [];
+        // data for classmates,array of json objects
+        const classmate_data = [
+      {
+        'name'      : 'John',
+        'shadow'    : 'no',
+        'garlic'     : 'no',
+        'complexion': 'pale'
+      },
+      {
+        'name'      : 'Lee',
+        'shadow'    : 'yes',
+        'garlic'     : 'no',
+        'complexion': 'pale'
+      },
+      {
+        'name'      : 'Emma',
+        'shadow'    : 'no',
+        'garlic'     : 'yes',
+        'complexion': 'brown'
+      },
+      {
+        'name'      : 'Ava',
+        'shadow'    : 'yes',
+        'garlic'     : 'yes',
+        'complexion': 'olive '
+      },
+      {
+        'name'      : 'Alex',
+        'shadow'    : 'no',
+        'garlic'     : 'no',
+        'complexion': 'brown'
+      },
+    ];
+        // copying array into classmates
+        let classmates = [...classmate_data];
 
+        
         function addClassmate() {
             const firstName = $('#fname').val().trim();
             const lastName = $('#lname').val().trim();
@@ -29,9 +64,9 @@
 
             const newClassmate = {
                 name: `${firstName} ${lastName}`,
-                shadow: shadowScore === 4 ? "No Shadow" : "Has Shadow",
-                complexion: complexionScore === 3 ? "Pale" : "Not Pale",
-                garlic: garlicScore === 3 ? "Hates Garlic" : "Doesn't Hate Garlic",
+                shadow: shadowScore === 4 ? "yes" : "no",
+                complexion: complexionScore === 3 ? "pale" : "not pale",
+                garlic: garlicScore === 3 ? "yes" : "no",
                 result: result
             };
 
@@ -57,18 +92,23 @@
             tbody.empty();
 
             classmates.forEach(classmate => {
+                const shadowScore = classmate.shadow == 'yes' ? 4:0;
+                const complexionScore= classmate.complexion === 'pale' ? 3:0;
+                const garlicScore = classmate.garlic === 'yes' ? 3: 0;
+                const totalScore = shadowScore + complexionScore + garlicScore;
+                const result = totalScore > 6 ? 'Vampire' : 'Human';
                 tbody.append(`
                     <tr>
                         <td>${classmate.name}</td>
                         <td>${classmate.shadow}</td>
                         <td>${classmate.complexion}</td>
                         <td>${classmate.garlic}</td>
-                        <td>${classmate.result}</td>
+                        <td>${result}</td>
                     </tr>
                 `);
             });
         }
-
+        
         function clearForm() {
             $('#fname').val('');
             $('#lname').val('');
@@ -76,6 +116,9 @@
             $('#complexion').val('');
             $('#garlic').val('');
         }
+        $(document).ready(function(){
+            updateTable();
+        });
     </script>
 </head>
 <body>
