@@ -7,46 +7,56 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
     <script type="text/javascript">
-        // data for classmates,array of json objects
+        // Data for classmates, array of JSON objects
         const classmate_data = [
-      {
-        'name'      : 'John',
-        'shadow'    : 'no',
-        'garlic'     : 'no',
-        'complexion': 'pale'
-      },
-      {
-        'name'      : 'Lee',
-        'shadow'    : 'yes',
-        'garlic'     : 'no',
-        'complexion': 'pale'
-      },
-      {
-        'name'      : 'Emma',
-        'shadow'    : 'no',
-        'garlic'     : 'yes',
-        'complexion': 'brown'
-      },
-      {
-        'name'      : 'Ava',
-        'shadow'    : 'yes',
-        'garlic'     : 'yes',
-        'complexion': 'olive '
-      },
-      {
-        'name'      : 'Alex',
-        'shadow'    : 'no',
-        'garlic'     : 'no',
-        'complexion': 'brown'
-      },
-    ];
-        // copying array into classmates
+            {
+                'name': 'John',
+                'shadow': 'no',
+                'garlic': 'no',
+                'complexion': 'pale'
+            },
+            {
+                'name': 'Lee',
+                'shadow': 'yes',
+                'garlic': 'no',
+                'complexion': 'pale'
+            },
+            {
+                'name': 'Emma',
+                'shadow': 'no',
+                'garlic': 'yes',
+                'complexion': 'brown'
+            },
+            {
+                'name': 'Ava',
+                'shadow': 'yes',
+                'garlic': 'yes',
+                'complexion': 'olive'
+            },
+            {
+                'name': 'Alex',
+                'shadow': 'no',
+                'garlic': 'no',
+                'complexion': 'brown'
+            },
+        ];
+
+        // Copying array into classmates
         let classmates = [...classmate_data];
 
-        
+        // Function to determine whether a classmate is a Vampire or Human
+        function getResult(classmate) {
+            const shadowScore = classmate.shadow === 'yes' ? 4 : 0;
+            const complexionScore = classmate.complexion === 'pale' ? 3 : 0;
+            const garlicScore = classmate.garlic === 'yes' ? 3 : 0;
+            const totalScore = shadowScore + complexionScore + garlicScore;
+            return totalScore > 6 ? 'Vampire' : 'Human';
+        }
+
+        // Function to add a new classmate
         function addClassmate() {
             const firstName = $('#fname').val().trim();
             const lastName = $('#lname').val().trim();
@@ -73,51 +83,86 @@
             classmates.push(newClassmate);
 
             updateTable();
+            updateChart(); // Update the chart with the new data
             clearForm();
         }
 
-        function randomGuess()
-        {
-            const shadow = Math.random() < .5? 4: 0;
-            const complexion = Math.random() < .5? 3:0;
-            const garlic = Math.random() < .5? 3:0;
+        // Function to generate a random guess
+        function randomGuess() {
+            const shadow = Math.random() < .5 ? 4 : 0;
+            const complexion = Math.random() < .5 ? 3 : 0;
+            const garlic = Math.random() < .5 ? 3 : 0;
 
             $('#shadow').val(shadow);
             $('#complexion').val(complexion);
             $('#garlic').val(garlic);
-
         }
+
+        // Function to update the table with current classmates
         function updateTable() {
             const tbody = $('#classmateTable tbody');
             tbody.empty();
 
             classmates.forEach(classmate => {
-                const shadowScore = classmate.shadow == 'yes' ? 4:0;
-                const complexionScore= classmate.complexion === 'pale' ? 3:0;
-                const garlicScore = classmate.garlic === 'yes' ? 3: 0;
-                const totalScore = shadowScore + complexionScore + garlicScore;
-                const result = totalScore > 6 ? 'Vampire' : 'Human';
+                const result = getResult(classmate);
                 tbody.append(`
-                    <tr>
-                        <td>${classmate.name}</td>
-                        <td>${classmate.shadow}</td>
-                        <td>${classmate.complexion}</td>
-                        <td>${classmate.garlic}</td>
-                        <td>${result}</td>
-                    </tr>
-                `);
+                        <tr>
+                            <td>${classmate.name}</td>
+                            <td>${classmate.shadow}</td>
+                            <td>${classmate.complexion}</td>
+                            <td>${classmate.garlic}</td>
+                            <td>${result}</td>
+                        </tr>
+                    `);
             });
         }
-        
+
+        // Function to clear the form after adding a classmate
         function clearForm() {
             $('#fname').val('');
             $('#lname').val('');
-            $('#shadow').val('' );
+            $('#shadow').val('');
             $('#complexion').val('');
             $('#garlic').val('');
         }
-        $(document).ready(function(){
-            updateTable();
+
+        // Load Google charts
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        // Function to update the pie chart
+        function updateChart() {
+    
+            const vampireCount = classmates.filter(classmate => getResult(classmate) === 'Vampire').length;
+            const humanCount = classmates.length - vampireCount;
+
+            
+            const data = google.visualization.arrayToDataTable([
+                ['Species', 'Percentage'],
+                ['Human', humanCount],
+                ['Vampire', vampireCount]
+            ]);
+
+            
+            const options = {
+                'title': 'Vampire vs Human',
+                'width': 550,
+                'height': 400
+            };
+
+            
+            const chart = new google.visualization.PieChart(document.getElementById('piechart'));
+            chart.draw(data, options);
+        }
+
+        
+        function drawChart() {
+            updateChart(); // Draw the chart initially
+        }
+
+        $(document).ready(function () {
+            updateTable(); 
+            updateChart();
         });
     </script>
 </head>
@@ -131,7 +176,7 @@
 
             <label for="lname">Last name:</label>
             <input type="text" id="lname" class="form-control" name="lname">
-            <div>  
+            <div>
                 <br>
                 <h2>Answer Questions or Choose Random Guess</h2>
                 <button onclick="randomGuess()">Random Guess</button>
@@ -153,7 +198,6 @@
                 <option value='3'>Yes</option>
                 <option value='0'>No</option>
             </select>
-            
 
             <button class="btn btn-primary" onclick="addClassmate()">Add Classmate</button>
         </div>
@@ -172,5 +216,8 @@
             <tbody></tbody>
         </table>
     </div>
+
+    <div id="piechart" align="center"></div>
 </body>
 </html>
+
